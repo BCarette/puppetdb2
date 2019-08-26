@@ -4,7 +4,7 @@ Puppet::Type.type(:db2_catalog_dcs).provide(:db2, :parent => Puppet::Provider::D
   mk_resource_methods
 
   def get_dcs
-    output = db2_exec_nofail('list dcs directory')
+    output = db_exec_instance_user_nofail('list dcs directory')
     parse_output(output, :name, {
       /Local database name/ => :name,
       /Target database name/ => :target,
@@ -35,13 +35,13 @@ Puppet::Type.type(:db2_catalog_dcs).provide(:db2, :parent => Puppet::Provider::D
     args << [ 'AR', @resource[:ar_library] ] if @resource[:ar_library]
     args << [ 'PARMS', "'\"#{@resource[:params]}\"'" ] if @resource[:params]
     args << "WITH '\"#{@resource[:comment]}\"'" if @resource[:comment]
-    db2_exec(args)
+    db_exec_instance_user(args)
     db2_terminate
   end
 
   def destroy
     args = [ 'UNCATALOG', 'DCS', 'DATABASE', @resource[:name] ]
-    db2_exec(args)
+    db_exec_instance_user(args)
     db2_terminate
   end
 

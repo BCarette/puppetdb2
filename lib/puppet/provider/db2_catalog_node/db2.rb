@@ -30,8 +30,8 @@ Puppet::Type.type(:db2_catalog_node).provide(:db2, :parent => Puppet::Provider::
     # Get the raw output of both regular and admin nodes, there is no single
     # command that combines these
     #
-    output_nodes = db2_exec_nofail('list node directory show detail')
-    output_admin_nodes = db2_exec_nofail('list admin node directory show detail')
+    output_nodes = db_exec_instance_user_nofail('list node directory show detail')
+    output_admin_nodes = db_exec_instance_user_nofail('list admin node directory show detail')
 
     # Parse the raw output into a hash
     nodes = parse_output(output_nodes, :name, output_matcher)
@@ -71,14 +71,14 @@ Puppet::Type.type(:db2_catalog_node).provide(:db2, :parent => Puppet::Provider::
       args << "WITH '\"#{@resource[:comment]}\"'" if @resource[:comment]
     end
 
-    db2_exec(args)
+    db_exec_instance_user(args)
     db2_terminate
   end
   
   def destroy
     args = [ 'UNCATALOG NODE' ]
     args << @resource[:name]
-    db2_exec(args)
+    db_exec_instance_user(args)
     db2_terminate
   end
 end
