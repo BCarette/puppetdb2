@@ -26,12 +26,12 @@ class Puppet::Provider::Db2 < Puppet::Provider
     db2_instance_exec(args.flatten.join(" "), false)
   end
 
-  def db_exec_instance_user(*args)
-    db2_instance_exec(args.flatten.join(" "), user=@resource[:instance])
+  def db2_exec_instance_user(*args)
+    db2_instance_exec(args.flatten.join(" "), true, @resource[:instance])
   end
 
-  def db_exec_instance_user_nofail(*args)
-      db2_instance_exec(args.flatten.join(" "), false, user=@resource[:instance])
+  def db2_exec_instance_user_nofail(*args)
+      db2_instance_exec(args.flatten.join(" "), false, @resource[:instance])
   end
 
   def exec_db2_command(command,envhash = {}, failonfail=true, user=nil)

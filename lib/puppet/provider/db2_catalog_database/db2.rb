@@ -14,7 +14,7 @@ Puppet::Type.type(:db2_catalog_database).provide(:db2, :parent => Puppet::Provid
   end
 
   def get_databases
-    output = db2_exec_nofail('list database directory')
+    output = db2_exec_instance_user_nofail('list database directory')
     parse_output(output, :as_alias, {
       /Database alias/ => :as_alias,
       /Database name/  => :db_name,
@@ -38,7 +38,7 @@ Puppet::Type.type(:db2_catalog_database).provide(:db2, :parent => Puppet::Provid
     args << [ 'ON', @resource[:path] ] if @resource[:path]
     args << [ 'AUTHENTICATION', @resource[:authentication] ] if @resource[:authentication]
     args << "WITH '\"#{@resource[:comment]}\"'" if @resource[:comment]
-    db2_exec(args)
+    db2_exec_instance_user(args)
     db2_terminate
   end
   
@@ -60,7 +60,7 @@ Puppet::Type.type(:db2_catalog_database).provide(:db2, :parent => Puppet::Provid
   def destroy
     args = [ 'UNCATALOG DATABASE' ]
     args << @resource[:as_alias]
-    db2_exec(args)
+    db2_exec_instance_user(args)
     db2_terminate
   end
 end
